@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Countdown Timer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #ece9e6, #ffffff);
+    }
+
+    .timer-container {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      width: 340px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .countdown {
+      font-size: 48px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #7a5fff;
+      transition: color 0.3s ease;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #7a5fff;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 0;
+      background-color: #7a5fff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #5e47e6;
+    }
+
+    .done-message {
+      color: #e63946;
+      font-weight: 500;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-container">
+    <h2>Countdown Timer</h2>
+    <input type="number" id="timeInput" placeholder="Enter time in seconds" min="1" />
+    <div class="countdown" id="countdown">00:00</div>
+    <div class="button-group">
+      <button type="button" onclick="startTimer()">Start</button>
+      <button type="button" onclick="resetTimer()">Reset</button>
+    </div>
+    <div class="done-message" id="doneMsg">⏰ Time's up!</div>
+  </div>
+
+  <script>
+    let timer;
+    let timeLeft = 0;
+
+    // Restore timer state on page load (if previously saved)
+    window.onload = () => {
+      const savedTime = localStorage.getItem('timeLeft');
+      if (savedTime) {
+        timeLeft = parseInt(savedTime);
+        updateCountdown();
+      }
+    };
+
+    function startTimer() {
+      const input = document.getElementById('timeInput').value;
+      timeLeft = parseInt(input);
+
+      if (isNaN(timeLeft) || timeLeft <= 0) {
+        alert("Please enter a valid number of seconds.");
+        return;
+      }
+
+      clearInterval(timer);
+      updateCountdown();
+      document.getElementById('doneMsg').style.display = 'none';
+
+      // Save timer state
+      localStorage.setItem('timeLeft', timeLeft);
+
+      timer = setInterval(() => {
+        timeLeft--;
+        updateCountdown();
+
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          document.getElementById('doneMsg').style.display = 'block';
+          localStorage.removeItem('timeLeft'); // Clear timer state on completion
+        } else {
+          localStorage.setItem('timeLeft', timeLeft); // Update timer state
+        }
+      }, 1000);
+    }
+
+    function updateCountdown() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById('countdown').textContent =
+        (minutes < 10 ? '0' : '') + minutes + ':' +
+        (seconds < 10 ? '0' : '') + seconds;
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timeLeft = 0;
+      document.getElementById('countdown').textContent = '00:00';
+      document.getElementById('doneMsg').style.display = 'none';
+      document.getElementById('timeInput').value = '';
+      localStorage.removeItem('timeLeft'); // Clear saved timer state
+    }
+  </script>
+</body>
+</html>
