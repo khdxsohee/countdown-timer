@@ -1,2 +1,11 @@
-# countdown-timer
-A countdown timer that counts down from a specified time. It's useful for setting deadlines or countdown events. The timer updates every second and alerts when the time is up.
+# Countdown Timer
+
+Welcome to the **Countdown Timer** repository! 
+
+## 🚀 Live Demo
+
+You can check out the live demo of this project by clicking the link below:
+
+🔗 [Live Demo](https://khalid-randhawa.web.app/apps-projects/countdown-timer.html)
+
+---
